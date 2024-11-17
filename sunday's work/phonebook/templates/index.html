@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>phonebook | homepage</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+    <!-- header starts here -->
+    <div class="flex flex-1 justify-between bg-teal-600 text-white px-[10%] py-2">
+        <h1 class="font-bold">Phonebook</h1>
+        <div class="flex items-center gap-2">
+            <input type="search" placeholder="search by name" class="border-2 border-gray-300 rounded-md">
+            <button class="bg-blue-500 text-white rounded-md px-4 py-2">Search</button>
+        </div>
+    </div>
+    <!-- header ends here -->
+
+    <!-- main content area starts here -->
+    <div class="flex flex-1 gap-5 mt-5 px-5">
+
+        <!-- insertion form here -->
+        <div class="w-3/12">
+            <div class="bg-slate-300 p-5 rounded-md border-teal-300 border-2">
+                <form action="{% url 'home-page' %}" method="post">
+                    {% csrf_token %}
+                    <div class="flex gap-2 flex-col">
+                        <label for="name" class="text-sm">Name: </label>
+                        <input type="text" id="name" name="name"
+                            class="border-2 px-3 py-2 focus:border-teal-300 focus:outline-none rounded-md">
+                    </div>
+                    <div class="flex gap-2 flex-col">
+                        <label for="phone_no" class="text-sm">Contact: </label>
+                        <input type="tel" id="phone_no" name="phone_no"
+                            class="border-2 px-3 py-2 focus:border-teal-300 focus:outline-none rounded-md">
+                    </div>
+                    <div class="flex justify-end mt-2 gap-2 ">
+                        <button type="submit" class="bg-blue-500 text-white rounded-md px-4 py-2">Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- data showing table here -->
+        <div class="w-9/12">
+            <table class="border-2 w-full border-teal-300">
+                <thead>
+                    <tr>
+                        <th class="border p-3">id</th>
+                        <th class="border p-3">Name</th>
+                        <th class="border p-3">Contact</th>
+                        <th class="border p-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- loop here to retrieve the data -->
+                    {% for contact in contacts %}
+                    <tr>
+                        <td class="border p-3">{{contact.id}}</td>
+                        <td class="border p-3">{{contact.name}}</td>
+                        <td class="border p-3">{{contact.phone_no}}</td>
+                        <td class="border p-3">
+                            <form action="{% url 'delete-contact' contact_id=contact.id %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="contact_id" value="{{contact.id}}">
+                                <button type="submit" class="bg-red-500 text-white rounded-md px-4 py-2">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- main content area ends here -->
+</body>
+
+</html>
